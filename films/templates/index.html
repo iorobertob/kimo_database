@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KIMO Film Archive</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+        
+        .search-container {
+            position: relative;
+            margin-top: 15px;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 12px 40px 12px 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-box:focus {
+            border-color: #007AFF;
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8e8e93;
+            font-size: 16px;
+            pointer-events: none;
+        }
+        
+        .films-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .film-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .film-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .film-poster {
+            width: 100%;
+            height: 200px;
+            background: #f0f0f0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .film-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .film-card:hover .film-poster img {
+            transform: scale(1.05);
+        }
+        
+        .film-poster-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: linear-gradient(135deg, #e9ecef, #dee2e6);
+            color: #6c757d;
+            font-size: 48px;
+        }
+        
+        .film-info {
+            padding: 16px;
+        }
+        
+        .film-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 4px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .film-subtitle {
+            font-size: 13px;
+            color: #86868b;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .film-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .film-year, .film-duration {
+            font-size: 12px;
+            color: #86868b;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+        
+        .film-genre {
+            font-size: 11px;
+            color: #007AFF;
+            background: rgba(0, 122, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 12px;
+            text-transform: capitalize;
+            font-weight: 500;
+        }
+        
+        .film-director {
+            font-size: 12px;
+            color: #515154;
+            margin-top: 4px;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #86868b;
+            font-size: 16px;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #86868b;
+        }
+        
+        .stats {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .stats-text {
+            font-size: 12px;
+            color: #515154;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .films-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+        }
+
+        .pagination {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .page-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            font-size: 14px;
+        }
+        
+        .page-links a {
+            color: #007AFF;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(0, 122, 255, 0.1);
+            transition: all 0.2s ease;
+            font-weight: 500;
+            border: 1px solid rgba(0, 122, 255, 0.2);
+        }
+        
+        .page-links a:hover {
+            background: rgba(0, 122, 255, 0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+        }
+        
+        .page-current {
+            color: #515154;
+            font-weight: 500;
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .films-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            .pagination {
+                padding: 15px;
+                margin-top: 20px;
+            }
+            
+            .page-links {
+                gap: 15px;
+                font-size: 13px;
+            }
+            
+            .page-links a,
+            .page-current {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>KIMO Film Archive</h1>
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="Search films by title, director, or genre..." id="searchInput">
+                <span class="search-icon">🔍</span>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stats-text" id="statsText">
+                <!-- Django template will populate this -->
+                {% if films %}
+                    Showing {{ films|length }} film{{ films|length|pluralize }}
+                {% else %}
+                    No films found
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="films-grid" id="filmsGrid">
+            {% for film in films %}
+            <div class="film-card" data-title="{{ film.original_title|lower }}" 
+                 data-director="{{ film.director|lower }}" 
+                 data-genre="{{ film.get_genre_display|lower }}"
+                 data-year="{{ film.production_year }}"
+                 data-film-id="{{ film.pk }}">
+                
+                <div class="film-poster">
+                    {% if film.poster %}
+                        <img src="{{ film.poster.url }}" alt="{{ film.original_title }}" loading="lazy">
+                    {% else %}
+                        <div class="film-poster-placeholder">
+                            🎬
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="film-info">
+                    <div class="film-title">{{ film.original_title }}</div>
+                    
+                    {% if film.english_title and film.english_title != film.original_title %}
+                        <div class="film-subtitle">{{ film.english_title }}</div>
+                    {% endif %}
+                    
+                    <div class="film-meta">
+                        <span class="film-year">{{ film.production_year }}</span>
+                        {% if film.running_time %}
+                            <span class="film-duration">{{ film.running_time }}</span>
+                        {% endif %}
+                        <span class="film-genre">{{ film.get_genre_display }}</span>
+                    </div>
+                    
+                    <div class="film-director">Directed by {{ film.director }}</div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-results">
+                <p>No films available in the archive.</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="no-results" id="noResults" style="display: none;">
+            <p>No films match your search criteria.</p>
+        </div>
+    </div>
+
+    {% block pagination %}
+        {% if is_paginated %}
+            <div class="pagination">
+                <span class="page-links">
+                    {% if page_obj.has_previous %}
+                        <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+                    <span class="page-current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+                    {% if page_obj.has_next %}
+                        <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                    {% endif %}
+                </span>
+            </div>
+        {% endif %}
+      {% endblock %}
+
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const filmsGrid = document.getElementById('filmsGrid');
+            const noResults = document.getElementById('noResults');
+            const statsText = document.getElementById('statsText');
+            const filmCards = document.querySelectorAll('.film-card');
+            const totalFilms = filmCards.length;
+            
+            function updateStats(visibleCount) {
+                if (visibleCount === 0) {
+                    statsText.textContent = 'No films found';
+                } else if (visibleCount === totalFilms) {
+                    statsText.textContent = `Showing ${totalFilms} film${totalFilms !== 1 ? 's' : ''}`;
+                } else {
+                    statsText.textContent = `Showing ${visibleCount} of ${totalFilms} films`;
+                }
+            }
+            
+            function filterFilms() {
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                let visibleCount = 0;
+                
+                filmCards.forEach(card => {
+                    const title = card.dataset.title || '';
+                    const director = card.dataset.director || '';
+                    const genre = card.dataset.genre || '';
+                    const year = card.dataset.year || '';
+                    
+                    const matches = title.includes(searchTerm) ||
+                                  director.includes(searchTerm) ||
+                                  genre.includes(searchTerm) ||
+                                  year.includes(searchTerm);
+                    
+                    if (matches) {
+                        card.style.display = 'block';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                updateStats(visibleCount);
+                noResults.style.display = visibleCount === 0 && filmCards.length > 0 ? 'block' : 'none';
+            }
+            
+            searchInput.addEventListener('input', filterFilms);
+            
+            // Add click navigation to film detail pages
+            filmCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const filmId = this.dataset.filmId;
+                    if (filmId) {
+                        window.location.href = `film/${filmId}  `;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
