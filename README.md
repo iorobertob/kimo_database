@@ -22,3 +22,22 @@ Navigate to the /scripts/ app and run
 ```
 python import_films.py
 ```
+
+1. Install Required System Packages
+bash# Update package list
+sudo apt update
+```
+# Install MySQL development packages and pkg-config
+sudo apt install pkg-config python3-dev default-libmysqlclient-dev build-essential
+If you're using MariaDB instead of MySQL:
+bashsudo apt install pkg-config python3-dev libmariadb-dev build-essential
+2. Install Python Dependencies
+bash# Now install the Python packages
+pip install python-decouple gunicorn
+
+# Try installing mysqlclient separately first
+pip install mysqlclient
+
+# Then install the rest of your requirements
+pip install -r req.txt
+```
