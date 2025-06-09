@@ -1,0 +1,17 @@
+asgiref
+chardet
+dj-database-url
+Django
+django-cors-headers
+django-filter
+djangorestframework
+gunicorn
+mysqlclient
+packaging
+pillow
+psycopg
+python-decouple
+python-dotenv
+sqlparse
+typing_extensions
+whitenoise
