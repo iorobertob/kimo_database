@@ -30,7 +30,7 @@ admin.site.index_title = "KIMO Films Database - Admin"
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('dashboard/', admin.site.urls),
     path('films/', include('films.urls')),
     path('api/',   include('api.urls')),  
 ]
