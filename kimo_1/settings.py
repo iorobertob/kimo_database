@@ -37,7 +37,11 @@ SECRET_KEY = config('SECRET_KEY', 'django-insecure-##s!_a_q-+s&8rwm_c48f(=f+ebod
 # DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['misc.lmta.lt', 'localhost']
+# Since this app is served under /kimo/, we need to configure Django for subdirectory deployment
+FORCE_SCRIPT_NAME = '/kimo'
+STATIC_URL = '/kimo/static/'
+
+ALLOWED_HOSTS = ['misc.lmta.lt', '127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -187,4 +191,21 @@ else:
         },
     }
 
-
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/var/www/kimo_database/django.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
