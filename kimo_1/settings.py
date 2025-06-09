@@ -180,7 +180,7 @@ if DEBUG:
 else:
     # Production settings
     STATIC_URL = '/kimo/static/'
-    STATIC_ROOT = '/var/www/misc.lmta.lt/kimo/static/'
+    STATIC_ROOT = config('STATIC_ROOT')
     STORAGES = {
         "staticfiles": {
             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
