@@ -40,7 +40,7 @@ cd /path/to/cloned/repository
 
 Install MySQL development packages and pkg-config
 ```
-bash# Update package list
+# Update package list
 sudo apt update
 
 sudo apt install pkg-config python3-dev default-libmysqlclient-dev build-essential
@@ -53,7 +53,7 @@ bashsudo apt install pkg-config python3-dev libmariadb-dev build-essential
 
 Install Python Dependencies
 ```
-bash# Now install the Python packages
+# Now install the Python packages
 pip install python-decouple gunicorn
 
 # Try installing mysqlclient separately first
@@ -205,7 +205,7 @@ sudo chmod 640 /var/www/kimo_database/.env
 
 ### (optional) Cleaup model table if there is previous data in it.
 ```
-bash# 1. Clean up existing data
+# 1. Clean up existing data
 python manage.py shell
 >>> from scripts.cleanup_and_reset_films import cleanup_and_reset_films
 >>> cleanup_and_reset_films()
