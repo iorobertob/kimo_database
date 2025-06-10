@@ -1,14 +1,14 @@
 # KIMO Database
 ## v 1.0.1
 
-# TODO before release
+## TODO 
 - Replace upload options for thumbs, etc., with links to those resources. Where to host them then?
 - Migrate to postgres?
 
-# Deploy
+## Deploy
 This asumes deployment in Linux. Tested in Ubuntu using mariaDB and Nginx
 
-## Create Database and user
+### Create Database and user
 ```
 mysql -u root
 
@@ -23,13 +23,13 @@ mysql> flush privileges;
 mysql> exit;
 ```
 
-# Create a Python virtual environment and activate it
+### Create a Python virtual environment and activate it
 ```
 python3 -m venv /path/to/virtual/environment
 source /path/to/virtual/environment/bin/activate
 ```
 
-## Clone and prepare Django application
+### Clone and prepare Django application
 Clone this repository to the server
 
 ```
@@ -63,7 +63,7 @@ pip install mysqlclient
 pip install -r requirements.txt
 ```
 
-## Collect Static Files
+### Collect Static Files
 ```
 # Create static directory
 sudo mkdir -p /var/www/misc.lmta.lt/web7/web/kimo/static/
@@ -72,7 +72,7 @@ sudo mkdir -p /var/www/misc.lmta.lt/web7/web/kimo/static/
 python manage.py collectstatic --noinput
 ```
 
-# Create Environment File
+### Create Environment File
 ```
 # Create .env file in your Django project root
 nano /path/to/kimo_1/.env
@@ -89,19 +89,19 @@ DB_PASSWORD=some_password
 STATIC_ROOT=/absolute/path/to/kimo/static/
 ```
 
-# Update Django Settings
+### Update Django Settings
 Open ```settings.py``` Make sure that the ALLOWED HOSTS point to the domain where this is deployed:
 ```
 ALLOWED_HOSTS = ['misc.lmta.lt', 'localhost']
 ```
 
-# Database setup/migration
+### Database setup/migration
 ```
 # Run migrations
 python manage.py migrate
 ```
 
-## Install and configure Gunicorn
+### Install and configure Gunicorn
 ```
 # Install Gunicorn
 pip install gunicorn
@@ -110,7 +110,7 @@ pip install gunicorn
 gunicorn kimo_1.wsgi:application --bind 0.0.0.0:8001
 ```
 
-## Create Gunicorn service
+### Create Gunicorn service
 ```
 # Create systemd service file
 sudo nano /etc/systemd/system/kimo.service
@@ -134,7 +134,7 @@ Restart=on-always
 WantedBy=multi-user.target
 ```
 
-## Start Gunicorn Service
+### Start Gunicorn Service
 ```
 # Reload systemd and start service
 sudo systemctl daemon-reload
@@ -143,8 +143,7 @@ sudo systemctl enable kimo
 sudo systemctl status kimo
 ```
 
-
-## Setup/update Nginx Configuration
+### Setup/update Nginx Configuration
 For this deployment, the Django app lives in a server with an already running site, as a /route from that domain. So we add the location configuration to the nginx file:
 
 ```
@@ -176,7 +175,7 @@ Add this location block inside the existing server block:
         }
 ```
 
-# Test and reload Nginx
+### Test and reload Nginx
 ```
 # Test nginx configuration
 sudo nginx -t
@@ -186,7 +185,7 @@ sudo systemctl reload nginx
 ```
 
 
-# (optional) Verify files ownerships and permissions
+### (optional) Verify files ownerships and permissions
 ```
 # Your Django project files should be owned by YOURUSER
 sudo chown -R YOURUSER:www-data /var/www/kimo_database/
@@ -204,7 +203,7 @@ sudo chmod 640 /var/www/kimo_database/.env
 ```
 
 
-# (optional) Cleaup model table if there is previous data in it.
+### (optional) Cleaup model table if there is previous data in it.
 ```
 bash# 1. Clean up existing data
 python manage.py shell
@@ -212,13 +211,13 @@ python manage.py shell
 >>> cleanup_and_reset_films()
 ```
 
-# (optional) Import film data from given csv file
+### (optional) Import film data from given csv file
 Navigate to the /scripts/ app and run
 ```
 python import_films.py
 ```
 
-# Changelog
+## Changelog
 ### v1.0 - 20250610 - First deployment. Implemented only listing all films with no filtering and a limited range of API endpoints.
 
 ### v1.0.1 - 20250610 - Added global search.
