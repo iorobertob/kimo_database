@@ -1,10 +1,7 @@
 # KIMO Database
-## v 1.0
-
-# !!!! THIS IS BROKEN !!!! THE SEARCH BREAKS EVERYTHING, FIX OR REMOVE
+## v 1.0.1
 
 # TODO before release
-- Make search across all database not only current paginated results
 - Replace upload options for thumbs, etc., with links to those resources. Where to host them then?
 - Migrate to postgres?
 
@@ -223,3 +220,5 @@ python import_films.py
 
 # Changelog
 ### v1.0 - 20250610 - First deployment. Implemented only listing all films with no filtering and a limited range of API endpoints.
+
+### v1.0.1 - 20250610 - Added global search.
