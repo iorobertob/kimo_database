@@ -182,6 +182,11 @@ else:
         },
     }
 
+if DEBUG:
+    LOG_FILE = './django.log'
+else:
+    LOG_FILE = config('LOG_FILE')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -189,7 +194,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/var/www/kimo_database/django.log',
+            'filename': LOG_FILE,
         },
     },
     'loggers': {

@@ -1,6 +1,8 @@
 # KIMO Database
 ## v 1.0
 
+# !!!! THIS IS BROKEN !!!! THE SEARCH BREAKS EVERYTHING, FIX OR REMOVE
+
 # TODO before release
 - Make search across all database not only current paginated results
 - Replace upload options for thumbs, etc., with links to those resources. Where to host them then?
