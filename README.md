@@ -2,7 +2,8 @@
 ## v 1.0.1
 
 ## TODO 
-- Replace upload options for thumbs, etc., with links to those resources. Where to host them then?
+- Add a superuser 
+Replace upload options for thumbs, etc., with links to those resources. Where to host them then?
 - Migrate to postgres?
 
 ## Deploy
